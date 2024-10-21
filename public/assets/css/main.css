@@ -1,0 +1,500 @@
+.token-input{
+    background-color: transparent;
+    border: none;
+}
+
+.token-input:focus{
+    border: none !important;
+    outline: none;
+}
+
+.token .token-label{
+    background-color: rgb(3, 1, 11);
+    color: white;
+    border-radius: 5px;
+    padding-left: 7px;
+    padding-right: 7px;
+    margin: 1px;
+}
+
+.token .close{
+    margin-left: 3px;
+    color: red;
+}
+
+.form-floating select{
+    padding-top: 21px !important;
+}
+
+#page_loader{
+    position: fixed; /* Fixed position to overlay the entire viewport */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #0F111A; /* Add a semi-transparent background */
+    z-index: 9999; /* Ensure the loader appears above other content */
+}
+
+#section_loader{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* HTML: <div class="loader"></div> */
+.loader_icon {
+    width: 50px;
+    aspect-ratio: 1;
+    display: grid;
+    border: 4px solid #0000;
+    border-radius: 50%;
+    border-right-color: #25b09b;
+    animation: l15 1s infinite linear;
+}
+
+.loader_icon::before,
+.loader_icon::after {    
+    content: "";
+    grid-area: 1/1;
+    margin: 2px;
+    border: inherit;
+    border-radius: 50%;
+    animation: l15 2s infinite;
+}
+
+.loader_icon::after {
+    margin: 8px;
+    animation-duration: 3s;
+}
+  
+@keyframes l15{ 
+    100%{transform: rotate(1turn)}
+}
+
+.org_logo_preview{
+    height: 90px;
+    border-radius: 10px;
+}
+
+.org_logo_preview_container {
+    position: relative;
+    display: inline-block;
+}
+
+.org_logo_remove_button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    background-color: rgba(12, 12, 23, 0.906);
+    border: none;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.org_logo_remove_button svg{
+    font-size: 30px;
+}
+
+.emp_profile_pic_preview{
+    height: 90px;
+    border-radius: 10px;
+}
+
+.emp_profile_pic_preview_container {
+    position: relative;
+    display: inline-block;
+}
+
+.emp_profile_pic_remove_button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    background-color: rgba(12, 12, 23, 0.906);
+    border: none;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.emp_profile_pic_remove_button svg{
+    font-size: 30px;
+}
+
+.table_view_record{
+    width: 100%;
+    table-layout: fixed;
+}
+
+.table_view_record_questions{
+    width: 100%;
+    table-layout: fixed;
+}
+
+.img_org_view_logo{
+    height: 70px;
+    width: auto;
+    border-radius: 5px;
+}
+
+.img_employee_view_profile_image{
+    height: 70px;
+    width: auto;
+    border-radius: 5px;
+}
+
+.tagify__tag--editable .tagify__tag-text{
+    color: rgb(141, 141, 141) !important;
+}
+
+.bootbox .modal-dialog{
+    min-width: 60%;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-dialog {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.hazard_review_model .modal-dialog{
+    min-width: 80%;
+}
+
+.table_view_record td{
+    padding: 5px;
+    word-wrap: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.table_view_record_questions td{
+    padding: 5px;
+    word-wrap: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.data_table{
+    width: 100% !important;
+}
+
+.btn-primary{
+    background-color: #0F111A !important;
+    border-color: #2F3549 !important;
+}
+
+.status-completed-fa{
+    font-size: 60px;
+}
+
+.notification_unread{
+    background-color: black;
+}
+
+.notification_read{
+    background-color: #141824;
+}
+
+.initial_risk_score_table .score_selector_row .initial_risk_score_selector_cell{
+    color: black;
+}
+
+.initial_risk_score_selector_cell.selected{
+    background-color: #3e5fff !important;
+    color: white !important;
+}
+
+.initial_risk_score_selector_cell {
+    cursor: pointer;
+}
+
+.residual_risk_score_table .score_selector_row .residual_risk_score_selector_cell{
+    color: black;
+}
+
+.residual_risk_score_selector_cell.selected{
+    background-color: #3e5fff !important;
+    color: white !important;
+}
+
+.residual_risk_score_selector_cell {
+    cursor: pointer;
+}
+
+.ui-very-high {
+    background-color: #ff1d1d !important; /* Red */
+    color: white;
+}
+
+.ui-high {
+    background-color: #fa9600 !important; /* Orange */
+    color: white;
+}
+
+.ui-moderate {
+    background-color: #e2e221 !important; /* Yellow */
+    color: black;
+}
+
+.ui-low {
+    background-color: #1b9f1b !important; /* Light Green */
+    color: black;
+}
+
+.badge-success{
+    background-color: #0f9526 !important;
+}
+
+.badge-danger{
+    background-color: #cc1a1a !important;
+}
+
+.badge-warning{
+    background-color: #ffbf00 !important;
+}
+
+.badge-primary{
+    background-color: #2c52f9 !important;
+}
+
+.badge-secondary{
+    background-color: #1e1e1e !important;
+}
+
+.badge-info{
+    background-color: #0ec6ae !important;
+}
+
+.dataTable{
+    width: 100% !important;
+}
+
+.text-success{
+    color: #0f9526 !important;
+}
+
+.text-danger{
+    color: #cc1a1a !important;
+}
+
+.text-warning{
+    color: #ffbf00 !important;
+}
+
+.text-primary{
+    color: #2c52f9 !important;
+}
+
+.text-secondary{
+    color: #1e1e1e !important;
+}
+
+.dt-button{
+    color: white !important;
+    background: black !important;
+    border-radius: 5px !important;
+    padding: 2px !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    font-size: 12px !important;
+}
+
+.blink {
+    animation: blinker 1s linear infinite;
+}
+
+@keyframes blinker {
+    50% {
+        opacity: 0;
+    }
+}
+
+.date-field-lable{
+    padding: 0.6rem 1rem !important; 
+    font-weight: 700 !important;
+    font-size: .64rem !important;
+    text-transform: uppercase !important;  
+}
+
+.signature-area {
+    border: 1px solid #ccc;
+    padding: 10px;
+    height: 200px;
+    border: var(--phoenix-border-width) solid var(--phoenix-border-color);
+    border-radius: var(--phoenix-border-radius);
+    background-color: var(--phoenix-emphasis-bg);
+    width: 200px;
+    height: 120px;
+}
+
+.signature-area canvas{
+    height: 100% !important;
+}
+
+.signature_obj{
+    background-color: transparent;
+    width: auto;
+}
+
+.certificate-container {
+    width: 100%;
+    max-width: 850px;
+    border: 10px solid #E0E0E0;
+    padding: 40px 30px;
+    background: #ffffff;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    font-family: 'Georgia', serif;
+    position: relative;
+}
+
+.certificate-logo {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 100px;
+}
+
+.certificate-logo img {
+    width: 100%;
+}
+
+.ribbon {
+    position: relative;
+    background: #16173f;
+    color: #fff;
+    padding: 15px 30px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 20px;
+    border-radius: 5px;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ribbon img {
+    width: 40px;
+    height: 40px;
+    margin-right: 15px;
+}
+
+.ribbon:before,
+.ribbon:after {
+    content: '';
+    position: absolute;
+    bottom: -15px;
+    border: 15px solid transparent;
+    z-index: -1;
+}
+
+.ribbon:before {
+    left: -30px;
+    border-right-color: #1E90FF;
+}
+
+.ribbon:after {
+    right: -30px;
+    border-left-color: #1E90FF;
+}
+
+.certificate-header {
+    text-align: center;
+    font-size: 36px;
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.certificate-subheader {
+    text-align: center;
+    font-size: 24px;
+    color: #777;
+    margin-top: 10px;
+    margin-bottom: 30px;
+    letter-spacing: 1.5px;
+}
+
+.certificate-recipient {
+    text-align: center;
+    font-size: 42px;
+    font-weight: bold;
+    color: #444;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+.certificate-description {
+    text-align: center;
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 40px;
+    font-style: italic;
+    padding: 0 50px;
+}
+
+.certificate-details {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    font-size: 16px;
+    color: #333;
+}
+
+.certificate-details span {
+    display: block;
+    text-align: center;
+    width: 45%;
+}
+
+.certificate-signature {
+    width: 200px;
+    margin: 10px auto 0;
+    padding-top: 10px;
+}
+
+.certificate-date{
+    margin-top: 20px
+}
+
+.coming-soon-section {
+    text-align: center;
+    padding: 50px;
+    background-color: #f8f9fa;
+    border: 2px dashed #ccc;
+    margin: 20px 0;
+    border-radius: 10px;
+}
+
+.coming-soon-content h2 {
+    font-size: 2em;
+    color: #007bff;
+}
+
+.coming-soon-content p {
+    font-size: 1.2em;
+    color: #555;
+}
+
+.nav-logo{
+    width: 100px;   
+}

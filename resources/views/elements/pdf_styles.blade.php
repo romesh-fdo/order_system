@@ -1,0 +1,1 @@
+<link href="{{ url('/assets/css/pdf.css') }}" type="text/css" rel="stylesheet" id="user-style-default">

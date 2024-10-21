@@ -1,0 +1,21 @@
+table, td, tr, th{
+    border: 1px solid black;
+    font-family: "Segoe UI", SegoeUI, "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+    border-collapse: collapse;
+}
+
+table{
+    margin:0px;
+    width: 100%;
+}
+
+td, th{
+    padding: 4px !important;
+    font-family: "Segoe UI", SegoeUI, "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+}
+
+body{
+    font-family: "Segoe UI", SegoeUI, "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+    font-size: 12px;
+    margin: -30px;
+}

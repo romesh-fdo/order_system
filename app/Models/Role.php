@@ -28,4 +28,9 @@ class Role extends Model
     {
         return self::$role_list;
     }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class);
+    }
 }

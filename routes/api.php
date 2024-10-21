@@ -3,6 +3,12 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\CustomerController;
+
+use App\Models\Role;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -14,6 +20,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group(['middleware' => 'guest'], function() {
+    Route::post('/login_process', [AuthController::class, 'loginProcess'])->name('login_process');
 });
+
+Route::group(['middleware' => ['jwt', 'role:' . Role::SUPER_ADMIN]], function () {
+    Route::get('/test', [DashboardController::class, 'test'])->name('test');
+});
+
+Route::group(['middleware' => ['jwt', 'role:' . Role::CUSTOMER]], function () {
+    // Define your routes here
+});
+
