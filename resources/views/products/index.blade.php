@@ -16,7 +16,7 @@
                 <div class="card-body">
                     <div class="row g-4">
                         <div class="col-12 col-xxl-6">
-                            <h2 class="mb-2">Dashboard</h2>
+                            <h2 class="mb-2">Manage Products</h2>
                         </div>
                         
                     </div>

@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
+use App\Models\User;
+
 class CheckRoleWeb
 {
     public function handle(Request $request, Closure $next, ...$roles): Response
@@ -35,11 +37,23 @@ class CheckRoleWeb
 
             $roles_array = explode('|', $roles[0]);
 
+            if(!Auth::check())
+            {
+                $user = User::find($decoded->sub);
+                if($user)
+                {
+                    Auth::login($user);
+                }
+                else
+                {
+                    return redirect()->route('login');
+                }
+            }
+
             if ($user_role_code === null || !in_array($user_role_code, $roles_array))
             {
                 return redirect()->route('login');
             }
-
         }
         catch (ExpiredException $e)
         {

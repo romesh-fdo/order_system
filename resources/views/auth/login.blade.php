@@ -47,40 +47,19 @@
 </html>
 
 <script>
-    $('#login_form').submit(function(e) {
-        e.preventDefault();
-        
-        $('#section_loader').show();
+    $(document).ready(function() {
+        $('#login_form').submit(async function(e) {
+            e.preventDefault();
 
-        $.ajax({
-            url: "{{ route('login_process') }}",
-            method: 'POST',
-            data: $(this).serialize(),
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function(response) {
-                $('#section_loader').hide();
+            const button_properties = {
+                id: 'login_btn',
+                text: 'Sign In',
+                process_text: 'Processing ...',
+            };
 
-                if(response.success)
-                {
-                    window.location.href = response.redirect;
-                }
-                else
-                {
-                    if(response.validate_errors)
-                    {
-                        $('#error-username').text(response.validate_errors.username || '');
-                        $('#error-password').text(response.validate_errors.password || '');
-                    }
-                }
-            },
-            error: function(xhr, status, error) {
-                $('#section_loader').hide();
-                console.error('Login Error:', error);
-            }
+            url = '{{ route("login_process") }}';
+            const response = await makeAjaxRequest(new FormData(this), url, button_properties);
         });
     });
-
 
 </script>
