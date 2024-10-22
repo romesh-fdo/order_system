@@ -47,6 +47,7 @@ class AuthController extends Controller
         }
     
         $user = Auth::user();
+        
         $token = JWT::encode(
             [
                 'sub' => $user->id,

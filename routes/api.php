@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\ProductController;
 
 use App\Models\Role;
 
@@ -25,7 +26,12 @@ Route::group(['middleware' => 'guest'], function() {
 });
 
 Route::group(['middleware' => ['jwt', 'role:' . Role::SUPER_ADMIN]], function () {
-    Route::get('/test', [DashboardController::class, 'test'])->name('test');
+    Route::post('/api/products', [ProductController::class, 'store'])->name('products.store');
+    Route::put('/api/products/{id}', [ProductController::class, 'update'])->name('products.update');
+    Route::get('/api/products', [ProductController::class, 'index'])->name('products.index');
+    Route::delete('/api/products/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
+    Route::get('/api/products/all', [ProductController::class, 'getProductsData'])->name('products.all');
+    Route::post('/api/products/show', [ProductController::class, 'show'])->name('products.show');
 });
 
 Route::group(['middleware' => ['jwt', 'role:' . Role::CUSTOMER]], function () {

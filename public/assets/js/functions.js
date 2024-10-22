@@ -5,6 +5,12 @@ function makeAjaxRequest(formData, url, buttonProps = null, configs = {}) {
             contentType: false,
             cache: false,
             processData: false,
+            xhrFields: {
+                withCredentials: true // Include credentials (cookies) in the request
+            },
+            headers: {
+                'Accept': 'application/json' // Optional: set the accept header
+            }
         };
 
         const ajaxConfigs = {
@@ -89,10 +95,11 @@ function handleAjaxResponse(response) {
 function displayValidationErrors(errors) {
     Object.keys(errors).forEach(field => {
         const warning = errors[field].join("\n");
-        $(`#error-${field}`).text(warning);
+        $(`#error-add-${field}`).text(warning);
+        $(`#error-edit-${field}`).text(warning);
     });
 }
 
 function handleChange(field_name) {
-    $('#' + field_name).text('');
+    $('#error-' + field_name).text('');
 }

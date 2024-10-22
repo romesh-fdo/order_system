@@ -5,31 +5,56 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Auth;
+
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+
+use App\Models\User;
 
 class CheckJWT
 {
     public function handle(Request $request, Closure $next): Response
     {
-        $auth_header = $request->header('Authorization');
-        if(!$auth_header || !str_starts_with($auth_header, 'Bearer '))
-        { 
-            return response()->json(['message' => 'Authorization token not found'], 401); 
+        $token = $request->cookie('jwt');
+
+        if (!$token) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized',
+                'redirect' => route('login'),
+                'notify' => true,
+            ]);
         }
-
-        $token = str_replace('Bearer ', '', $auth_header);
-
+    
         try
         {
             $decoded = JWT::decode($token, new Key(env('JWT_SECRET'), 'HS256'));
             $request->attributes->add(['decoded' => $decoded]);
-        } 
-        catch (Exception $e)
-        { 
-            return response()->json(['message' => 'Invalid token'], 401); 
-        }
 
+            if(!Auth::check())
+            {
+                $user = User::find($decoded->sub);
+                if($user)
+                {
+                    $request->attributes->add(['auth' => $user]);
+                }
+                else
+                {
+                    return redirect()->route('login');
+                }
+            }
+        }
+        catch (Exception $e)
+        {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized',
+                'redirect' => route('login'),
+                'notify' => true,
+            ]);
+        }
+    
         return $next($request);
     }
 }
