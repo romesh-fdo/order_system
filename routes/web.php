@@ -27,7 +27,7 @@ Route::group(['middleware' => 'web_check_guest'], function() {
 
 Route::group(['middleware' => 'web_role:' . Role::SUPER_ADMIN], function() {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/products', [ProductController::class, 'index'])->name('products');
+    Route::get('/manage_products', [ProductController::class, 'index'])->name('manage.products');
 });
 
 Route::group(['middleware' => 'web_role:' . Role::CUSTOMER], function() {

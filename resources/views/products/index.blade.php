@@ -94,33 +94,33 @@
                     <div class="row g-5">
                         <div class="col-md-12">
                             <div class="form-floating">
-                                <input class="form-control edit-name" name="name" type="text" placeholder="Name" />
+                                <input class="form-control edit-name" name="name" type="text" placeholder="Name" oninput="handleChange('edit-name')"/>
                                 <label>Name</label>
                             </div>
-                            <small class="text-danger" id="error-name"></small>
+                            <small class="text-danger" id="error-edit-name"></small>
                         </div>
                         <div class="col-md-12">
                             <div class="form-floating">
                                 <textarea class="form-control edit-description" name="description" placeholder="Description"
-                                    rows="3"></textarea>
+                                    rows="3"oninput="handleChange('edit-description')"></textarea>
                                 <label>Description</label>
                             </div>
-                            <small class="text-danger" id="error-description"></small>
+                            <small class="text-danger" id="error-edit-description"></small>
                         </div>
                         <div class="col-md-12">
                             <div class="form-floating">
-                                <input class="form-control edit-price" name="price" type="number" step="0.01" placeholder="Price" />
+                                <input class="form-control edit-price" name="price" type="number" step="0.01" placeholder="Price" oninput="handleChange('edit-price')"/>
                                 <label>Price</label>
                             </div>
-                            <small class="text-danger" id="error-price"></small>
+                            <small class="text-danger" id="error-edit-price"></small>
                         </div>
                         <div class="col-md-12">
                             <div class="form-floating">
                                 <input class="form-control edit-stock_quantity" name="stock_quantity" type="number"
-                                    placeholder="Stock Quantity" />
+                                    placeholder="Stock Quantity" oninput="handleChange('edit-stock_quantity')"/>
                                 <label>Stock Quantity</label>
                             </div>
-                            <small class="text-danger" id="error-stock_quantity"></small>
+                            <small class="text-danger" id="error-edit-stock_quantity"></small>
                         </div>
                     </div>
                     <div class="row g-5 mt-1">
@@ -272,13 +272,17 @@
                             var updateForm = $(this)[0];
                             var formData = new FormData(updateForm);
 
-                            var update_url = `{{ route("products.update", ["id" => ":id"]) }}`.replace(':id', response.data.enc_id);
+                            var update_url = `{{ route("products.update", ["id" => ":id"]) }}`.replace(':id', response.data.uuid);
 
                             const edit_button_properties = {
                                 id: 'btn_update_record',
                                 text: '<i class="fa fa-save me-2"></i>Update Product',
                                 process_text: 'Updating ...',
                             };
+
+                            // const custom_configs = {
+                            //     method: 'PUT'
+                            // };
 
                             try {
                                 const update_response = await makeAjaxRequest(formData, update_url, edit_button_properties);
@@ -338,7 +342,7 @@
     async function deleteRecord(id) {
         bootbox.confirm({
             title: 'Delete Product?',
-            message: 'Do you want to delete this product? This process cannot be undone.',
+            message: 'Do you want to delete this product?',
             buttons: {
                 confirm: {
                     label: 'Yes',
@@ -359,19 +363,16 @@
                         }
                     });
 
-                    try {
-                        const delete_response = await $.ajax({
-                            url: url,
-                            type: 'DELETE',
-                            dataType: 'json',
-                        });
+                    const custom_configs = {
+                        method: 'DELETE'
+                    };
 
-                        if (delete_response.success) {
-                            $('.data_table').DataTable().destroy();
-                            data_table = loadTableData();
-                        }
-                    } catch (error) {
-                        console.error('Error deleting record:', error);
+                    const delete_response = await makeAjaxRequest(null, url, null, custom_configs);
+
+                    if (delete_response.success) {
+                        bootbox.hideAll();
+                        $('.data_table').DataTable().destroy();
+                        data_table = loadTableData();
                     }
                 }
             }

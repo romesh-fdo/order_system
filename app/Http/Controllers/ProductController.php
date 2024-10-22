@@ -57,8 +57,10 @@ class ProductController extends Controller
 
     public function update(Request $request, $id)
     {
-        $product = Product::find($id);
-        if (!$product) {
+        $product = Product::where('uuid', $id)->first();
+
+        if(!$product)
+        {
             return response()->json([
                 'success' => false,
                 'message' => 'Product not found',
@@ -83,7 +85,15 @@ class ProductController extends Controller
             ]);
         }
 
-        $product->update($request->all());
+        if(!$product->update($request->all()))
+        {
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong. Please try again',
+                'validate_errors' => null,
+                'notify' => true,
+            ]);
+        }
 
         return response()->json([
             'success' => true,
@@ -96,8 +106,10 @@ class ProductController extends Controller
 
     public function destroy($id)
     {
-        $product = Product::find($id);
-        if (!$product) {
+        $product = Product::where('uuid', $id)->first();
+
+        if(!$product)
+        {
             return response()->json([
                 'success' => false,
                 'message' => 'Product not found',
@@ -106,21 +118,28 @@ class ProductController extends Controller
             ]);
         }
 
-        $product->delete(); // Soft-delete
+        if(!$product->delete())
+        {
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong. Please try again',
+                'notify' => true,
+            ]);
+        }
 
         return response()->json([
             'success' => true,
             'message' => 'Product deleted successfully',
-            'validate_errors' => null,
-            'redirect' => false,
             'notify' => true,
         ]);
     }
 
     public function show(Request $request)
     {
-        $product = Product::find($request['record_id']);
-        if (!$product) {
+        $product = Product::where('uuid', $request['record_id'])->first();
+
+        if(!$product)
+        {
             return response()->json([
                 'success' => false,
                 'message' => 'Product not found',
@@ -128,6 +147,8 @@ class ProductController extends Controller
                 'notify' => true,
             ]);
         }
+
+        $product->created_at_formatted = $product->created_at->format('jS \of F Y g:i A');
 
         return response()->json([
             'success' => true,

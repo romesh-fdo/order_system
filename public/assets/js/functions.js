@@ -6,10 +6,10 @@ function makeAjaxRequest(formData, url, buttonProps = null, configs = {}) {
             cache: false,
             processData: false,
             xhrFields: {
-                withCredentials: true // Include credentials (cookies) in the request
+                withCredentials: true
             },
             headers: {
-                'Accept': 'application/json' // Optional: set the accept header
+                'Accept': 'application/json'
             }
         };
 

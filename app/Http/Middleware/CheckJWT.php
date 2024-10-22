@@ -27,34 +27,6 @@ class CheckJWT
             ]);
         }
     
-        try
-        {
-            $decoded = JWT::decode($token, new Key(env('JWT_SECRET'), 'HS256'));
-            $request->attributes->add(['decoded' => $decoded]);
-
-            if(!Auth::check())
-            {
-                $user = User::find($decoded->sub);
-                if($user)
-                {
-                    $request->attributes->add(['auth' => $user]);
-                }
-                else
-                {
-                    return redirect()->route('login');
-                }
-            }
-        }
-        catch (Exception $e)
-        {
-            return response()->json([
-                'success' => false,
-                'message' => 'Unauthorized',
-                'redirect' => route('login'),
-                'notify' => true,
-            ]);
-        }
-    
         return $next($request);
     }
 }

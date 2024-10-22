@@ -8,7 +8,7 @@
             <ul class="navbar-nav flex-column" id="navbarVerticalNav">
                 <li class="nav-item">
                     <div class="nav-item-wrapper">
-                        <a class="nav-link nav-link-header label-1 {{ $current_url == route('products') ? 'active' : '' }}" href="{{ route('products') }}" role="button" data-bs-toggle="" aria-expanded="false">
+                        <a class="nav-link nav-link-header label-1 {{ $current_url == route('manage.products') ? 'active' : '' }}" href="{{ route('manage.products') }}" role="button" data-bs-toggle="" aria-expanded="false">
                             <div class="d-flex align-items-center nav-link-header-text-tab">
                                 <span class="nav-link-icon">
                                     <i class="fas fa-compass"></i>
