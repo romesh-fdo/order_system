@@ -7,6 +7,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\OrderController;
 
 use App\Models\Role;
 
@@ -35,6 +36,6 @@ Route::group(['middleware' => ['jwt', 'role:' . Role::SUPER_ADMIN]], function ()
 });
 
 Route::group(['middleware' => ['jwt', 'role:' . Role::CUSTOMER]], function () {
-    // Define your routes here
+    Route::post('/orders/place', [OrderController::class, 'place'])->name('orders.place');
 });
 

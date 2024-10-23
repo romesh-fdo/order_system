@@ -33,7 +33,7 @@ class AuthController extends Controller
                 'message' => 'Validation failed',
                 'validate_errors' => $validator->errors(),
                 'notify' => true,
-            ]);
+            ], 422);
         }
     
         $credentials = $request->only('username', 'password');
@@ -43,7 +43,7 @@ class AuthController extends Controller
                 'success' => false,
                 'message' => 'Invalid username or password',
                 'notify' => true,
-            ]);
+            ], 422);
         }
     
         $user = Auth::user();
@@ -74,7 +74,7 @@ class AuthController extends Controller
             'token' => $token,
             'notify' => true,
             'redirect' => $redirect_url,
-        ])->cookie('jwt', $token, 60, null, null, false, true);
+        ], 200)->cookie('jwt', $token, 60, null, null, false, true);
     }
 
     public function logout(Request $request)
@@ -86,6 +86,6 @@ class AuthController extends Controller
             'message' => 'Logout successful',
             'notify' => true,
             'redirect' => route('login')
-        ])->cookie($token);
+        ], 200)->cookie($token);
     }
 }

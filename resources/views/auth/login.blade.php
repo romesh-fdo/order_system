@@ -58,7 +58,7 @@
             };
 
             url = '{{ route("login_process") }}';
-            const response = await makeAjaxRequest(new FormData(this), url, button_properties);
+            const response = await makeAPIRequest(new FormData(this), url, button_properties);
         });
     });
 

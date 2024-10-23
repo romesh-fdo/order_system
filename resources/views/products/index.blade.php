@@ -226,7 +226,7 @@
                     };
 
                     try {
-                        const add_response = await makeAjaxRequest(formData, store_url, add_button_properties);
+                        const add_response = await makeAPIRequest(formData, store_url, add_button_properties);
 
                         if (add_response.success) {
                             bootbox.hideAll();
@@ -253,7 +253,7 @@
         });
 
         try {
-            const response = await makeAjaxRequest(formData, url, null);
+            const response = await makeAPIRequest(formData, url, null);
 
             if (response.success) {
                 bootbox.dialog({
@@ -285,7 +285,7 @@
                             // };
 
                             try {
-                                const update_response = await makeAjaxRequest(formData, update_url, edit_button_properties);
+                                const update_response = await makeAPIRequest(formData, update_url, edit_button_properties);
 
                                 if (update_response.success) {
                                     bootbox.hideAll();
@@ -318,7 +318,7 @@
         });
 
         try {
-            const response = await makeAjaxRequest(formData, url, null);
+            const response = await makeAPIRequest(formData, url, null);
 
             if (response.success) {
                 bootbox.dialog({
@@ -367,7 +367,7 @@
                         method: 'DELETE'
                     };
 
-                    const delete_response = await makeAjaxRequest(null, url, null, custom_configs);
+                    const delete_response = await makeAPIRequest(null, url, null, custom_configs);
 
                     if (delete_response.success) {
                         bootbox.hideAll();

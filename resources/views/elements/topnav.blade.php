@@ -50,21 +50,8 @@
                 <div class="dropdown-menu dropdown-menu-end navbar-dropdown-caret py-0 dropdown-profile shadow border"
                     aria-labelledby="navbarDropdownUser">
                     <div class="card position-relative border-0">
-                        <div class="card-body p-0">
-                            <div class="text-center pt-4 pb-3">
-                                <div class="avatar avatar-xl ">
-                                    @if($profile_image_url)
-                                        <img class="rounded-circle " src="{{$profile_image_url}}" alt="" />
-                                    @else
-                                        <i class="fas fa-user-circle fa-2x mt-2"></i>
-                                    @endif
-                                </div>
-                                <h6 class="mt-2 text-body-emphasis">{{Auth::user()->name}}</h6>
-                            </div>
-                        </div>
-                        <hr>
                         <div class="card-footer p-0 border-top border-translucent">
-                            <div class="px-3 mt-3"> <a
+                            <div class="px-3 mt-3 mb-3"> <a
                                     class="btn btn-phoenix-secondary d-flex flex-center w-100"
                                     href="#!" onclick="logout()"> <span class="me-2" data-feather="log-out" id="btn_logout">
                                     </span>Sign out</a></div>
@@ -88,7 +75,7 @@
             }
         });
 
-        const response = await makeAjaxRequest(formData, url, null);
+        const response = await makeAPIRequest(formData, url, null);
 
         if(response.success)
         {

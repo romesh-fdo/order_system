@@ -1,4 +1,4 @@
-function makeAjaxRequest(formData, url, buttonProps = null, configs = {}) {
+function makeAPIRequest(formData, url, buttonProps = null, configs = {}) {
     return new Promise((resolve, reject) => {
         const defaultConfigs = {
             method: 'POST',
@@ -38,15 +38,15 @@ function makeAjaxRequest(formData, url, buttonProps = null, configs = {}) {
                 handleAjaxResponse(response);
                 resolve(response);
             })
-            .fail((jqXHR) => {
+            .fail((response) => {
                 if (buttonProps) {
                     const { id, text } = buttonProps;
                     const button = $(`#${id}`);
                     button.prop("disabled", false).html(text);
                 }
 
-                showNotification('error', 'Something went wrong when processing your request. Please try again');
-                reject(jqXHR);
+                handleAjaxResponse(response);
+                reject(response);
             });
     });
 }
@@ -69,7 +69,7 @@ function showNotification(status, message) {
 }
 
 function handleAjaxResponse(response) {
-    //console.log(response);
+    console.log('res '+response);
     if (response.success) {
         if (response.notify) {
             showNotification('success', response.message);
@@ -94,9 +94,13 @@ function handleAjaxResponse(response) {
 
 function displayValidationErrors(errors) {
     Object.keys(errors).forEach(field => {
+        console.log(field);
+        
         const warning = errors[field].join("\n");
+        console.log(warning);
         $(`#error-add-${field}`).text(warning);
         $(`#error-edit-${field}`).text(warning);
+        $(`#error-${field}`).text(warning);
     });
 }
 
