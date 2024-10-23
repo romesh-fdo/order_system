@@ -13,15 +13,13 @@
 
         <div class="content">
             <div class="card">
-                <div class="card-header">
+                <div class="card-header d-flex justify-content-between align-items-center">
                     <h3>Manage Products</h3>
-                    <div class="mt-3 data_actions">
-                        <a href="javascript:void(0)" onclick="addRecord()" class="float-end">
-                            <button class="btn btn-sm btn-success">
-                                <i class="me-2 fas fa-plus-circle"></i> Add
-                            </button>
-                        </a>
-                    </div>
+                    <a href="javascript:void(0)" onclick="addRecord()" class="float-end">
+                        <button class="btn btn-sm btn-success">
+                            <i class="me-2 fas fa-plus-circle"></i> Add
+                        </button>
+                    </a>
                 </div>
                 <div class="card-body">
                     <table class="table table border-top border-translucent fs-9 mb-0 data_table" style="width:100%">

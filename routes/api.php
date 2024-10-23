@@ -33,6 +33,9 @@ Route::group(['middleware' => ['jwt', 'role:' . Role::SUPER_ADMIN]], function ()
     Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
     Route::get('/products', [ProductController::class, 'getProductsData'])->name('products.all');
     Route::post('/products/show', [ProductController::class, 'show'])->name('products.show');
+
+    Route::get('/orders', [OrderController::class, 'getOrderData'])->name('orders.all');
+    Route::post('/orders/show', [OrderController::class, 'show'])->name('orders.show');
 });
 
 Route::group(['middleware' => ['jwt', 'role:' . Role::CUSTOMER]], function () {
