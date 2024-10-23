@@ -34,7 +34,7 @@ class ProductController extends Controller
                 'message' => 'Fix the above issues and try again',
                 'validate_errors' => $validator->errors(),
                 'notify' => true,
-            ]);
+            ], 422);
         }
 
         if(!Product::create($request->all()))
@@ -44,16 +44,15 @@ class ProductController extends Controller
                 'message' => 'Something went wrong. Please try again',
                 'validate_errors' => null,
                 'notify' => true,
-            ]);
+            ], 500);
         }
 
         return response()->json([
             'success' => true,
             'message' => 'Product created successfully',
             'validate_errors' => null,
-            'redirect' => false,
             'notify' => true,
-        ]);
+        ], 200);
     }
 
     public function update(Request $request, $id)
@@ -67,7 +66,7 @@ class ProductController extends Controller
                 'message' => 'Product not found',
                 'validate_errors' => null,
                 'notify' => true,
-            ]);
+            ], 500);
         }
 
         $validator = Validator::make($request->all(), [
@@ -83,7 +82,7 @@ class ProductController extends Controller
                 'message' => 'Fix the above issues and try again',
                 'validate_errors' => $validator->errors(),
                 'notify' => true,
-            ]);
+            ], 422);
         }
 
         if(!$product->update($request->all()))
@@ -93,21 +92,21 @@ class ProductController extends Controller
                 'message' => 'Something went wrong. Please try again',
                 'validate_errors' => null,
                 'notify' => true,
-            ]);
+            ], 500);
         }
 
         return response()->json([
             'success' => true,
             'message' => 'Product updated successfully',
             'validate_errors' => null,
-            'redirect' => false,
             'notify' => true,
-        ]);
+        ], 200);
     }
 
     public function destroy($id)
     {
         $product = Product::where('uuid', $id)->first();
+        dd($product);
 
         if(!$product)
         {
@@ -116,7 +115,7 @@ class ProductController extends Controller
                 'message' => 'Product not found',
                 'validate_errors' => null,
                 'notify' => true,
-            ]);
+            ], 422);
         }
 
         if(!$product->delete())
@@ -125,14 +124,14 @@ class ProductController extends Controller
                 'success' => false,
                 'message' => 'Something went wrong. Please try again',
                 'notify' => true,
-            ]);
+            ], 500);
         }
 
         return response()->json([
             'success' => true,
             'message' => 'Product deleted successfully',
             'notify' => true,
-        ]);
+        ], 200);
     }
 
     public function show(Request $request)
@@ -146,19 +145,27 @@ class ProductController extends Controller
                 'message' => 'Product not found',
                 'validate_errors' => null,
                 'notify' => true,
-            ]);
+            ], 500);
         }
 
         $product->created_at_formatted = $product->created_at->format('jS \of F Y g:i A');
 
+        $product_data = [
+            'uuid' => $product->uuid,
+            'name' => $product->name,
+            'description' => $product->description,
+            'price' => $product->price,
+            'stock_quantity' => $product->stock_quantity,
+            'created_at' => $product->created_at_formatted,
+        ];
+
         return response()->json([
             'success' => true,
             'message' => 'Product retrieved successfully',
-            'data' => $product,
+            'data' => $product_data,
             'validate_errors' => null,
-            'redirect' => false,
             'notify' => false,
-        ]);
+        ], 200);
     }
 
     public function getProductsData(Request $request)

@@ -64,7 +64,7 @@
                                     </tr>
                                 </thead>
                                 <tbody class="view-items">
-                                    <!-- Items will be appended here dynamically -->
+
                                 </tbody>
                             </table>
                         </td>
@@ -165,4 +165,81 @@
         }
     }
 
+    async function cancelOrder(id) {
+        bootbox.confirm({
+            title: 'Cancel Order',
+            message: 'Do you want to cancel this order?',
+            buttons: {
+                confirm: {
+                    label: 'Yes',
+                    className: 'btn-danger'
+                },
+                cancel: {
+                    label: 'No',
+                    className: 'btn-secondary'
+                }
+            },
+            callback: async (result) => {
+                if (result) {
+                    var url = `{{ route("orders.cancel") }}`;
+
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                    });
+
+                    var formData = new FormData();
+                    formData.append('record_id', id);
+
+                    const delete_response = await makeAPIRequest(formData, url, null);
+
+                    if (delete_response.success) {
+                        bootbox.hideAll();
+                        $('.data_table').DataTable().destroy();
+                        data_table = loadTableData();
+                    }
+                }
+            }
+        });
+    }
+
+    async function completeOrder(id) {
+        bootbox.confirm({
+            title: 'Complete Order',
+            message: 'Do you want to complete this order?',
+            buttons: {
+                confirm: {
+                    label: 'Yes',
+                    className: 'btn-danger'
+                },
+                cancel: {
+                    label: 'No',
+                    className: 'btn-secondary'
+                }
+            },
+            callback: async (result) => {
+                if (result) {
+                    var url = `{{ route("orders.complete") }}`;
+
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                    });
+
+                    var formData = new FormData();
+                    formData.append('record_id', id);
+
+                    const delete_response = await makeAPIRequest(formData, url, null);
+
+                    if (delete_response.success) {
+                        bootbox.hideAll();
+                        $('.data_table').DataTable().destroy();
+                        data_table = loadTableData();
+                    }
+                }
+            }
+        });
+    }
 </script>

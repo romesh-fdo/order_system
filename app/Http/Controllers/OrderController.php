@@ -134,13 +134,27 @@ class OrderController extends Controller
                 'status_name' => $order->status->status,
                 'status_badge' => $order->status->badge,
                 'items' => $order->orderItems->map(function ($item) {
+                    if($item->product)
+                    {
+                        return [
+                            'product' => [
+                                'uuid' => $item->product->uuid,
+                                'name' => $item->product->name,
+                                'description' => $item->product->description,
+                                'price' => $item->price,
+                                'quantity' => $item->quantity,
+                            ],
+                            'subtotal' => $item->quantity * $item->price,
+                        ];
+                    }
+
                     return [
                         'product' => [
-                            'uuid' => $item->product->uuid,
-                            'name' => $item->product->name,
-                            'description' => $item->product->description,
-                            'price' => $item->price,
-                            'quantity' => $item->quantity,
+                            'uuid' => null,
+                            'name' => "(Product deleted)",
+                            'description' => "-",
+                            'price' => "-",
+                            'quantity' => "-",
                         ],
                         'subtotal' => $item->quantity * $item->price,
                     ];
@@ -157,6 +171,7 @@ class OrderController extends Controller
             'order_details' => $response,
         ], 200);
     }
+
 
     public function manageOrders()
     {
@@ -199,6 +214,11 @@ class OrderController extends Controller
             ->addIndexColumn()
             ->addColumn('action', function ($row) {
                 $actionBtn = '<a class="me-2" href="javascript:void(0)" onclick="viewRecord(\'' . $row->uuid . '\')"><i class="fas fa-eye text-success"></i></a>';
+                if($row->status->code == Status::NEW_ORDER)
+                {
+                    $actionBtn .= '<a class="me-2" href="javascript:void(0)" onclick="cancelOrder(\'' . $row->uuid . '\')"><i class="fas fa-ban text-danger"></i></a>';
+                    $actionBtn .= '<a class="me-2" href="javascript:void(0)" onclick="completeOrder(\'' . $row->uuid . '\')"><i class="fa-regular fa-circle-check text-primary"></i></a>';
+                }
                 return $actionBtn;
             })
             ->rawColumns(['action'])
@@ -228,7 +248,9 @@ class OrderController extends Controller
             'status_name' => $order->status->status,
             'status_badge' => $order->status->badge,
             'formatted_created_at' => $order->created_at->format('jS \\of F Y g:i A'),
-            'items' => $order->orderItems->map(function($item) {
+            'items' => $order->orderItems->filter(function($item) {
+                return $item->product && !$item->product->trashed();
+            })->map(function($item) {
                 return [
                     'name' => $item->product->name,
                     'quantity' => $item->quantity,
@@ -236,7 +258,9 @@ class OrderController extends Controller
                     'total_item_price' => $item->quantity * $item->price
                 ];
             }),
-            'total_order_price' => $order->orderItems->sum(function($item) {
+            'total_order_price' => $order->orderItems->filter(function($item) {
+                return $item->product && !$item->product->trashed();
+            })->sum(function($item) {
                 return $item->quantity * $item->price;
             })
         ];
@@ -248,4 +272,79 @@ class OrderController extends Controller
         ], 200);
     }
 
+    public function cancelOrder(Request $request)
+    {
+        $order = Order::where('uuid', $request['record_id'])->first();
+
+        if(!$order)
+        {
+            return response()->json([
+                'success' => false,
+                'message' => 'Order not found',
+                'notify' => true,
+            ], 404);
+        }
+
+        if($order->status_id != Status::getIdByCode(Status::NEW_ORDER))
+        {
+            return response()->json([
+                'success' => false,
+                'message' => 'Order cannot be canceled as it has already been processed',
+                'notify' => true,
+            ], 422);
+        }
+
+        if(!$order->update(['status_id' => Status::getIdByCode(Status::CANCELLED)]))
+        {
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong. Please try again',
+                'notify' => true,
+            ], 422);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Order canceled successfully',
+            'notify' => true,
+        ], 200);
+    }
+
+    public function completeOrder(Request $request)
+    {
+        $order = Order::where('uuid', $request['record_id'])->first();
+
+        if(!$order)
+        {
+            return response()->json([
+                'success' => false,
+                'message' => 'Order not found',
+                'notify' => true,
+            ], 404);
+        }
+
+        if($order->status_id != Status::getIdByCode(Status::NEW_ORDER))
+        {
+            return response()->json([
+                'success' => false,
+                'message' => 'Order cannot be canceled as it has already been processed',
+                'notify' => true,
+            ], 422);
+        }
+
+        if(!$order->update(['status_id' => Status::getIdByCode(Status::COMPLETED)]))
+        {
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong. Please try again',
+                'notify' => true,
+            ], 422);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Order completed successfully',
+            'notify' => true,
+        ], 200);
+    }
 }

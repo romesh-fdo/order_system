@@ -158,8 +158,7 @@
             const orderDetails = response.order_details;
             let summary = ``;
 
-            if(orderDetails)
-            {
+            if (orderDetails) {
                 orderDetails.forEach(order => {
                     summary += `
                         <div class="col-sm-12 mt-2">
@@ -171,15 +170,26 @@
                                     <hr>`;
 
                     order.items.forEach(item => {
-                        summary += `
-                                    <div class="card mb-2">
-                                        <div class="card-body">
-                                            <b>${item.product.name}</b> x ${item.product.quantity} <br>
-                                            ${item.product.description}
-                                            <hr>
-                                            $${item.subtotal}
-                                        </div>
-                                    </div>`;
+                        if (item.product) {
+                            summary += `
+                                <div class="card mb-2">
+                                    <div class="card-body">
+                                        <b>${item.product.name}</b> x ${item.product.quantity} <br>
+                                        ${item.product.description ?? '-'}
+                                        <hr>
+                                        $${item.subtotal}
+                                    </div>
+                                </div>`;
+                        } else {
+                            summary += `
+                                <div class="card mb-2">
+                                    <div class="card-body">
+                                        <b>Product Unavailable</b> x ${item.product ? item.product.quantity : item.quantity} <br>
+                                        <hr>
+                                        $${item.subtotal}
+                                    </div>
+                                </div>`;
+                        }
                     });
 
                     summary += `
@@ -187,15 +197,14 @@
                             </div>
                         </div>`;
                 });
-            }
-            else
-            {
+            } else {
                 summary = `<div class="col-12 text-center">No Orders Yet</div>`;
             }
 
             $('#order_summary').html(summary);
         }
     }
+
 
 
 </script>

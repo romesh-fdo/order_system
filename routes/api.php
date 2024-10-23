@@ -36,6 +36,8 @@ Route::group(['middleware' => ['jwt', 'role:' . Role::SUPER_ADMIN]], function ()
 
     Route::get('/orders', [OrderController::class, 'getOrderData'])->name('orders.all');
     Route::post('/orders/show', [OrderController::class, 'show'])->name('orders.show');
+    Route::post('/orders/cancel', [OrderController::class, 'cancelOrder'])->name('orders.cancel');
+    Route::post('/orders/complete', [OrderController::class, 'completeOrder'])->name('orders.complete');
 });
 
 Route::group(['middleware' => ['jwt', 'role:' . Role::CUSTOMER]], function () {
