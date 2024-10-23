@@ -45,7 +45,7 @@ function makeAPIRequest(formData, url, buttonProps = null, configs = {}) {
                     button.prop("disabled", false).html(text);
                 }
 
-                handleAjaxResponse(response);
+                handleAjaxResponse(response.responseJSON);
                 reject(response);
             });
     });
@@ -69,6 +69,7 @@ function showNotification(status, message) {
 }
 
 function handleAjaxResponse(response) {
+    console.log(response);
     if (response.success) {
         if (response.notify) {
             showNotification('success', response.message);

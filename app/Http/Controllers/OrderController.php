@@ -24,7 +24,7 @@ class OrderController extends Controller
             'items.*.product_id' => 'required|exists:products,uuid',
             'items.*.quantity' => 'required|integer|min:1',
         ]);
-    
+
         $validator->after(function ($validator) {
             if ($validator->errors()->has('items.*.quantity')) {
                 $validator->errors()->add('items.quantity', 'One or more items have invalid quantity. Each item must have a quantity of at least 1.');
@@ -44,8 +44,7 @@ class OrderController extends Controller
 
         $user = User::where('uuid', $order_data['user_id'])->first();
 
-        if(!$user)
-        {
+        if (!$user) {
             return response()->json([
                 'success' => false,
                 'message' => 'User not found',
@@ -55,17 +54,32 @@ class OrderController extends Controller
 
         DB::beginTransaction();
 
-        try 
-        {
+        try {
+            $total_price = 0;
+
+            foreach ($order_data['items'] as $item)
+            {
+                $product = Product::where('uuid', $item['product_id'])->first();
+
+                if ($product->stock_quantity < $item['quantity']) {
+                    DB::rollBack();
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Insufficient stock for ' . $product->name . '. Only ' . $product->stock_quantity . ' items are remaining',
+                        'stock_quantity' => $product->stock_quantity,
+                        'notify' => true,
+                    ], 422);
+                }
+            }
+
             $order = Order::create([
                 'user_id' => $user['id'],
                 'total_price' => 0,
                 'status_id' => Status::getIdByCode(Status::NEW_ORDER),
             ]);
 
-            $total_price = 0;
-
-            foreach ($order_data['items'] as $item) {
+            foreach ($order_data['items'] as $item)
+            {
                 $product = Product::where('uuid', $item['product_id'])->first();
 
                 $price = $product->price * $item['quantity'];
@@ -76,6 +90,10 @@ class OrderController extends Controller
                     'product_id' => $product->id,
                     'quantity' => $item['quantity'],
                     'price' => $price,
+                ]);
+
+                $product->update([
+                    'stock_quantity' => $product->stock_quantity - $item['quantity']
                 ]);
             }
 
@@ -89,10 +107,7 @@ class OrderController extends Controller
                 'order_uuid' => $order->uuid,
                 'notify' => true,
             ], 201);
-            
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
                 'success' => false,
@@ -102,6 +117,7 @@ class OrderController extends Controller
             ], 500);
         }
     }
+
 
     public function getMyOrders(Request $request)
     {
@@ -141,5 +157,10 @@ class OrderController extends Controller
             'success' => true,
             'order_details' => $response,
         ], 200);
+    }
+
+    public function manageOrders()
+    {
+        return view('order.manage');
     }
 }

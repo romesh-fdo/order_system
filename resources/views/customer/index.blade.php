@@ -46,7 +46,9 @@
                         </div>
                         <div class="card-body">
                             <div class="row" id="order_summary">
-                                    
+                                <div class="col-12 text-center">
+                                    Loading ....
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -154,35 +156,42 @@
 
         if (response.success) {
             const orderDetails = response.order_details;
-            let summary = '';
+            let summary = ``;
 
-            orderDetails.forEach(order => {
-                summary += `
-                    <div class="col-sm-12 mt-2">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4><b>Placed On :</b> ${new Date(order.created_at).toLocaleString()}</h4>
-                                <h4><b>Status :</b> <span class="badge badge-${order.status_badge}">${order.status_name || 'Unknown'}</span></h4>
-                                <h4><b>Total :</b> $${order.total_price}</h4>
-                                <hr>`;
-
-                order.items.forEach(item => {
+            if(orderDetails)
+            {
+                orderDetails.forEach(order => {
                     summary += `
-                                <div class="card mb-2">
-                                    <div class="card-body">
-                                        <b>${item.product.name}</b> <br>
-                                        ${item.product.description}
-                                        <hr>
-                                        $${item.subtotal}
-                                    </div>
-                                </div>`;
-                });
+                        <div class="col-sm-12 mt-2">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4><b>Placed On :</b> ${new Date(order.created_at).toLocaleString()}</h4>
+                                    <h4><b>Status :</b> <span class="badge badge-${order.status_badge}">${order.status_name || 'Unknown'}</span></h4>
+                                    <h4><b>Total :</b> $${order.total_price}</h4>
+                                    <hr>`;
 
-                summary += `
+                    order.items.forEach(item => {
+                        summary += `
+                                    <div class="card mb-2">
+                                        <div class="card-body">
+                                            <b>${item.product.name}</b> x ${item.product.quantity} <br>
+                                            ${item.product.description}
+                                            <hr>
+                                            $${item.subtotal}
+                                        </div>
+                                    </div>`;
+                    });
+
+                    summary += `
+                                </div>
                             </div>
-                        </div>
-                    </div>`;
-            });
+                        </div>`;
+                });
+            }
+            else
+            {
+                summary = `<div class="col-12 text-center">No Orders Yet</div>`;
+            }
 
             $('#order_summary').html(summary);
         }

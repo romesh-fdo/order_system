@@ -20,6 +20,20 @@
                         </a>
                     </div>
                 </li>
+                <li class="nav-item">
+                    <div class="nav-item-wrapper">
+                        <a class="nav-link nav-link-header label-1 {{ $current_url == route('manage.orders') ? 'active' : '' }}" href="{{ route('manage.orders') }}" role="button" data-bs-toggle="" aria-expanded="false">
+                            <div class="d-flex align-items-center nav-link-header-text-tab">
+                                <span class="nav-link-icon">
+                                    <i class="fas fa-compass"></i>
+                                </span>
+                                <span class="nav-link-text-wrapper">
+                                    <span class="nav-link-text nav-link-header-text">Orders</span>
+                                </span>
+                            </div>
+                        </a>
+                    </div>
+                </li>
             </ul>
         </div>
     </div>

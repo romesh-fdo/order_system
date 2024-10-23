@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\OrderController;
 
 use App\Models\Role;
 
@@ -27,7 +28,10 @@ Route::group(['middleware' => 'web_check_guest'], function() {
 
 Route::group(['middleware' => 'web_role:' . Role::SUPER_ADMIN], function() {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
     Route::get('/manage_products', [ProductController::class, 'index'])->name('manage.products');
+
+    Route::get('/manage_orders', [OrderController::class, 'manageOrders'])->name('manage.orders');
 });
 
 Route::group(['middleware' => 'web_role:' . Role::CUSTOMER], function() {
