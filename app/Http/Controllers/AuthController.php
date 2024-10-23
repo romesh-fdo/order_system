@@ -58,22 +58,12 @@ class AuthController extends Controller
             env('JWT_SECRET'),
             'HS256'
         );
-
-        if($user->role->code == Role::SUPER_ADMIN)
-        {
-            $redirect_url = route('dashboard');
-        }
-        else
-        {
-            $redirect_url = route('order');
-        }
     
         return response()->json([
             'success' => true,
             'message' => 'Login successful',
             'token' => $token,
             'notify' => true,
-            'redirect' => $redirect_url,
         ], 200)->cookie('jwt', $token, 60, null, null, false, true);
     }
 
@@ -85,7 +75,6 @@ class AuthController extends Controller
             'success' => true,
             'message' => 'Logout successful',
             'notify' => true,
-            'redirect' => route('login')
         ], 200)->cookie($token);
     }
 }

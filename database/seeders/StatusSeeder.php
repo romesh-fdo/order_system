@@ -15,13 +15,12 @@ class StatusSeeder extends Seeder
     public function run(): void
     {
         $statuses = [
-            ['status' => Status::NEW_ORDER, 'code' => 'NEW_ORDER', 'badge' => 'danger'],
-            ['status' => Status::IN_PROGRESS, 'code' => 'IN_PROGRESS', 'badge' => 'warning'],
-            ['status' => Status::COMPLETED, 'code' => 'COMPLETED', 'badge' => 'success'],
-            ['status' => Status::CANCELLED, 'code' => 'CANCELLED', 'badge' => 'secondary'],
+            ['status' => 'New Order', 'code' => tatus::NEW_ORDER, 'badge' => 'danger'],
+            ['status' => 'In progress', 'code' => Status::IN_PROGRESS, 'badge' => 'warning'],
+            ['status' => 'Completed', 'code' => Status::COMPLETED, 'badge' => 'success'],
+            ['status' => 'Cancelled', 'code' => Status::CANCELLED, 'badge' => 'secondary'],
         ];
 
-        // Insert statuses into the database
         foreach ($statuses as $status) {
             Status::updateOrCreate(
                 ['code' => $status['code']],

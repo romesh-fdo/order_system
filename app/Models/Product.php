@@ -25,7 +25,6 @@ class Product extends Model
         });
     }
 
-    // Relationships
     public function orderItems()
     {
         return $this->hasMany(OrderItem::class);

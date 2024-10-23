@@ -9,6 +9,7 @@
 
 <body>
     <main class="main" id="top">
+        @include('elements.topnav')
         <div class="content">
             <div class="row g-4">
                 <div class="col-sm-12 col-md-6">
@@ -44,7 +45,9 @@
                             <h3>My orders</h3>
                         </div>
                         <div class="card-body">
-                            <pre id="order_summary"></pre>
+                            <div class="row" id="order_summary">
+                                    
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -131,9 +134,60 @@
                 cart_details.items = [];
                 $('#selected_products').html('');
                 $('#order_summary').text(JSON.stringify(response.order_summary, null, 2));
+                loadMyOrders();
             }
         });
+
+        loadMyOrders();
     });
+
+    
+    async function loadMyOrders()
+    {
+        const newConfigs = {
+            method: 'GET',
+        };
+
+        const url = '{{ route("orders.my_orders") }}';
+
+        const response = await makeAPIRequest(null, url, null, newConfigs);
+
+        if (response.success) {
+            const orderDetails = response.order_details;
+            let summary = '';
+
+            orderDetails.forEach(order => {
+                summary += `
+                    <div class="col-sm-12 mt-2">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4><b>Placed On :</b> ${new Date(order.created_at).toLocaleString()}</h4>
+                                <h4><b>Status :</b> <span class="badge badge-${order.status_badge}">${order.status_name || 'Unknown'}</span></h4>
+                                <h4><b>Total :</b> $${order.total_price}</h4>
+                                <hr>`;
+
+                order.items.forEach(item => {
+                    summary += `
+                                <div class="card mb-2">
+                                    <div class="card-body">
+                                        <b>${item.product.name}</b> <br>
+                                        ${item.product.description}
+                                        <hr>
+                                        $${item.subtotal}
+                                    </div>
+                                </div>`;
+                });
+
+                summary += `
+                            </div>
+                        </div>
+                    </div>`;
+            });
+
+            $('#order_summary').html(summary);
+        }
+    }
+
 
 </script>
 

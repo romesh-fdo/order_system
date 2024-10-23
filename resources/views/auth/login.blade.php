@@ -59,6 +59,11 @@
 
             url = '{{ route("login_process") }}';
             const response = await makeAPIRequest(new FormData(this), url, button_properties);
+
+            if(response.success)
+            {
+                window.location.href = "{{ route('order') }}";
+            }
         });
     });
 

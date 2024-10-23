@@ -69,7 +69,6 @@ function showNotification(status, message) {
 }
 
 function handleAjaxResponse(response) {
-    console.log('res '+response);
     if (response.success) {
         if (response.notify) {
             showNotification('success', response.message);

@@ -37,5 +37,9 @@ Route::group(['middleware' => ['jwt', 'role:' . Role::SUPER_ADMIN]], function ()
 
 Route::group(['middleware' => ['jwt', 'role:' . Role::CUSTOMER]], function () {
     Route::post('/orders/place', [OrderController::class, 'place'])->name('orders.place');
+    Route::get('/orders/my_orders', [OrderController::class, 'getMyOrders'])->name('orders.my_orders');
 });
 
+Route::group(['middleware' => ['jwt', 'role:' . Role::SUPER_ADMIN. '|' . Role::CUSTOMER]], function() {
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+});

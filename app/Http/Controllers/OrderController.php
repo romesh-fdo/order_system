@@ -12,6 +12,8 @@ use App\Models\OrderItem;
 use App\Models\Status;
 use App\Models\User;
 
+use App\Helpers\Helper;
+
 class OrderController extends Controller
 {
     public function place(Request $request)
@@ -101,4 +103,43 @@ class OrderController extends Controller
         }
     }
 
+    public function getMyOrders(Request $request)
+    {
+        $user = Helper::getAuth($request);
+
+        $orders = Order::where('user_id', $user->id)
+            ->with(['orderItems.product', 'status'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $response = $orders->map(function ($order) {
+            return [
+                'uuid' => $order->uuid,
+                'total_price' => $order->total_price,
+                'status_name' => $order->status->status,
+                'status_badge' => $order->status->badge,
+                'items' => $order->orderItems->map(function ($item) {
+                    return [
+                        'product' => [
+                            'uuid' => $item->product->uuid,
+                            'name' => $item->product->name,
+                            'description' => $item->product->description,
+                            'price' => $item->price,
+                            'quantity' => $item->quantity,
+                        ],
+                        'subtotal' => $item->quantity * $item->price,
+                    ];
+                }),
+                'order_total' => $order->orderItems->sum(function ($item) {
+                    return $item->quantity * $item->price;
+                }),
+                'created_at' => $order->created_at->toIso8601String(),
+            ];
+        });
+
+        return response()->json([
+            'success' => true,
+            'order_details' => $response,
+        ], 200);
+    }
 }

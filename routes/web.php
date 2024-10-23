@@ -35,5 +35,5 @@ Route::group(['middleware' => 'web_role:' . Role::CUSTOMER], function() {
 });
 
 Route::group(['middleware' => 'web_role:' . Role::SUPER_ADMIN. '|' . Role::CUSTOMER], function() {
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    
 });

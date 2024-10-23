@@ -25,7 +25,6 @@ class Order extends Model
         });
     }
 
-    // Relationships
     public function orderItems()
     {
         return $this->hasMany(OrderItem::class);
@@ -38,6 +37,6 @@ class Order extends Model
 
     public function status()
     {
-        return $this->hasMany(Status::class);
+        return $this->belongsTo(Status::class);
     }
 }

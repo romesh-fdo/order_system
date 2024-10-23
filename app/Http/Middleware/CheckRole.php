@@ -18,9 +18,8 @@ class CheckRole
             return response()->json([
                 'success' => false,
                 'message' => 'Unauthorized',
-                'redirect' => route('login'),
                 'notify' => true,
-            ]);
+            ], 401);
         }
 
         try {
@@ -37,22 +36,22 @@ class CheckRole
                 return response()->json([
                     'success' => false,
                     'message' => 'Unauthorized',
-                    'redirect' => route('login'),
                     'notify' => true,
-                ]);
+                ], 401);
             }
 
             if (!in_array($user_role_code, $roles_array)) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Unauthorized',
-                    'redirect' => route('login'),
                     'notify' => true,
-                ]);
+                ], 401);
             }
 
         } catch (Exception $e) {
-            return response()->json(['message' => 'Invalid token'], 401);
+            return response()->json([
+                'message' => 'Invalid token'
+            ], 401);
         }
 
         return $next($request);

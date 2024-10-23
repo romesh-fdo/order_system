@@ -22,9 +22,8 @@ class CheckJWT
             return response()->json([
                 'success' => false,
                 'message' => 'Unauthorized',
-                'redirect' => route('login'),
                 'notify' => true,
-            ]);
+            ], 401);
         }
     
         return $next($request);
