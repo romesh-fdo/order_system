@@ -69,7 +69,7 @@ function showNotification(status, message) {
 }
 
 function handleAjaxResponse(response) {
-    console.log(response);
+
     if (response.success) {
         if (response.notify) {
             showNotification('success', response.message);
@@ -94,10 +94,7 @@ function handleAjaxResponse(response) {
 
 function displayValidationErrors(errors) {
     Object.keys(errors).forEach(field => {
-        console.log(field);
-        
         const warning = errors[field].join("\n");
-        console.log(warning);
         $(`#error-add-${field}`).text(warning);
         $(`#error-edit-${field}`).text(warning);
         $(`#error-${field}`).text(warning);

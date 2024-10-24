@@ -193,7 +193,7 @@
         return table = $('.data_table').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ route('products.all') }}",
+            ajax: "{{ route('products') }}",
             stateSave: true,
             columns: columns,
             order: [[1, 'asc']],
@@ -237,9 +237,7 @@
     }
 
     async function editRecord(id) {
-        var formData = new FormData();
-        formData.append('record_id', id);
-        var url = '{{ route("products.show") }}';
+        var url = `{{ route("products.show", ":id") }}`.replace(':id', id);
 
         $.ajaxSetup({
             headers: {
@@ -247,8 +245,12 @@
             }
         });
 
+        const newConfigs = {
+            method: 'GET',
+        };
+
         try {
-            const response = await makeAPIRequest(formData, url, null);
+            const response = await makeAPIRequest(null, url, null, newConfigs);
 
             if (response.success) {
                 bootbox.dialog({
@@ -302,9 +304,7 @@
     }
 
     async function viewRecord(id) {
-        var formData = new FormData();
-        formData.append('record_id', id);
-        var url = '{{ route("products.show") }}';
+        var url = `{{ route("products.show", ":id") }}`.replace(':id', id);
 
         $.ajaxSetup({
             headers: {
@@ -312,8 +312,12 @@
             }
         });
 
+        const newConfigs = {
+            method: 'GET',
+        };
+
         try {
-            const response = await makeAPIRequest(formData, url, null);
+            const response = await makeAPIRequest(null, url, null, newConfigs);
 
             if (response.success) {
                 bootbox.dialog({

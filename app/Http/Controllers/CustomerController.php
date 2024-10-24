@@ -12,7 +12,7 @@ class CustomerController extends Controller
 {
     public function order(Request $request)
     {
-        $products = Product::all();
+        $products = Product::where('stock_quantity', '>', 0)->get();
         $auth_user = Helper::getAuth($request);
 
         return view('customer.index', [

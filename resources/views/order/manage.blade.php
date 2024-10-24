@@ -93,11 +93,10 @@
             {data: 'user_name', name: 'user.name'},
             {data: 'total_price', name: 'total_price'},
             {
-                    data: 'status_name', 
-                    name: 'status_name', 
+                    data: 'status', 
+                    name: 'status', 
                     render: function(data, type, row) {
-                        let badgeClass = row.status_badge || 'light';
-                        return `<span class="badge badge-${badgeClass}">${data}</span>`;
+                        return `<span class="badge badge-primary">${data}</span>`;
                     }
                 },
             {data: 'formatted_created_at', name: 'created_at'},
@@ -112,7 +111,7 @@
         return table = $('.data_table').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ route('orders.all') }}",
+            ajax: "{{ route('orders') }}",
             stateSave: true,
             columns: columns,
             order: [[1, 'asc']],
@@ -165,10 +164,18 @@
         }
     }
 
-    async function cancelOrder(id) {
+    async function updateOrderStatus(id, status)
+    {
+        const statusMessages = {
+            cancelled: 'Do you want to cancel this order?',
+            completed: 'Do you want to complete this order?'
+        };
+
+        const confirmMessage = statusMessages[status];
+
         bootbox.confirm({
-            title: 'Cancel Order',
-            message: 'Do you want to cancel this order?',
+            title: 'Update Order Status',
+            message: confirmMessage,
             buttons: {
                 confirm: {
                     label: 'Yes',
@@ -181,7 +188,7 @@
             },
             callback: async (result) => {
                 if (result) {
-                    var url = `{{ route("orders.cancel") }}`;
+                    var url = `{{ route("orders.update", ":id") }}`.replace(':id', id);
 
                     $.ajaxSetup({
                         headers: {
@@ -189,12 +196,17 @@
                         }
                     });
 
-                    var formData = new FormData();
-                    formData.append('record_id', id);
+                    const new_order_data = {
+                        status: status
+                    };
 
-                    const delete_response = await makeAPIRequest(formData, url, null);
+                    const newConfigs = {
+                        method: 'PUT',
+                    };
 
-                    if (delete_response.success) {
+                    const response = await makeAPIRequest(JSON.stringify(new_order_data), url, null, newConfigs);
+
+                    if (response.success) {
                         bootbox.hideAll();
                         $('.data_table').DataTable().destroy();
                         data_table = loadTableData();
@@ -204,42 +216,4 @@
         });
     }
 
-    async function completeOrder(id) {
-        bootbox.confirm({
-            title: 'Complete Order',
-            message: 'Do you want to complete this order?',
-            buttons: {
-                confirm: {
-                    label: 'Yes',
-                    className: 'btn-danger'
-                },
-                cancel: {
-                    label: 'No',
-                    className: 'btn-secondary'
-                }
-            },
-            callback: async (result) => {
-                if (result) {
-                    var url = `{{ route("orders.complete") }}`;
-
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        }
-                    });
-
-                    var formData = new FormData();
-                    formData.append('record_id', id);
-
-                    const delete_response = await makeAPIRequest(formData, url, null);
-
-                    if (delete_response.success) {
-                        bootbox.hideAll();
-                        $('.data_table').DataTable().destroy();
-                        data_table = loadTableData();
-                    }
-                }
-            }
-        });
-    }
 </script>

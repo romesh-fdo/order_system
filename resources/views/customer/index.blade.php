@@ -28,7 +28,7 @@
                             <div id="selected_products" class="mt-3"></div>
 
                             <div class="mt-3">
-                                <small class="text-danger" id="error-items.quantity"></small>
+                                <small class="text-danger" id="error-items_quantities"></small>
                             </div>
 
                             <div class="mt-3">
@@ -79,7 +79,7 @@
                         <div class="card-body d-flex justify-content-between align-items-center">
                             <span>${selected_product_name}</span>
                             <div class="d-flex align-items-center">
-                                <input type="number" class="form-control quantity-input" data-product-id="${selected_product_id}" min="1" value="1" style="width: 70px; display: inline-block;">
+                                <input type="number" oninput="handleChange('items_quantities')" class="form-control quantity-input" data-product-id="${selected_product_id}" min="1" value="1" style="width: 70px; display: inline-block;">
                                 <button class="btn btn-danger btn-sm ms-2 remove-product" data-product-id="${selected_product_id}">Remove</button>
                             </div>
                         </div>
@@ -91,6 +91,8 @@
                     quantity: 1
                 });
             }
+
+            $('#product_selector').val('');
         });
 
         $(document).on('input', '.quantity-input', function() {
@@ -115,7 +117,7 @@
         $('#btn_place_order').click(async function() {
             if(cart_details.items.length === 0)
             {
-                bootbox.alert('Please select at least one product before placing an order.');
+                showNotification('warning', 'Please select at least one product before placing an order');
                 return;
             }
 
@@ -125,7 +127,7 @@
                 process_text: 'Placing Order...'
             };
 
-            const url = '{{ route("orders.place") }}';
+            const url = '{{ route("orders.store") }}';
 
             const jsonData = JSON.stringify(cart_details);
 
@@ -165,7 +167,7 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h4><b>Placed On :</b> ${new Date(order.created_at).toLocaleString()}</h4>
-                                    <h4><b>Status :</b> <span class="badge badge-${order.status_badge}">${order.status_name || 'Unknown'}</span></h4>
+                                    <h4><b>Status :</b> <span class="badge badge-primary">${order.status || 'Unknown'}</span></h4>
                                     <h4><b>Total :</b> $${order.total_price}</h4>
                                     <hr>`;
 

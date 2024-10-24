@@ -12,7 +12,11 @@ class Order extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = ['user_id', 'total_price', 'status_id'];
+    const PENDING = 'pending';
+    const COMPLETED = 'completed';
+    const CANCELLED = 'cancelled';
+
+    protected $fillable = ['user_id', 'total_price', 'status'];
 
     protected static function boot()
     {
@@ -33,10 +37,5 @@ class Order extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function status()
-    {
-        return $this->belongsTo(Status::class);
     }
 }

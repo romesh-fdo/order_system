@@ -106,7 +106,6 @@ class ProductController extends Controller
     public function destroy($id)
     {
         $product = Product::where('uuid', $id)->first();
-        dd($product);
 
         if(!$product)
         {
@@ -134,18 +133,18 @@ class ProductController extends Controller
         ], 200);
     }
 
-    public function show(Request $request)
+    public function show($id)
     {
-        $product = Product::where('uuid', $request['record_id'])->first();
+        $product = Product::where('uuid', $id)->first();
 
         if(!$product)
         {
             return response()->json([
                 'success' => false,
-                'message' => 'Product not found',
+                'message' => 'Product not found3',
                 'validate_errors' => null,
                 'notify' => true,
-            ], 500);
+            ], 404);
         }
 
         $product->created_at_formatted = $product->created_at->format('jS \of F Y g:i A');
@@ -183,8 +182,7 @@ class ProductController extends Controller
         if ($search = $request->input('search.value')) {
             $query->where(function($subQuery) use ($search) {
                 $subQuery->where('products.name', 'LIKE', "%{$search}%")
-                    ->orWhere('products.description', 'LIKE', "%{$search}%")
-                    ->orWhere('products.price', 'LIKE', "%{$search}%");
+                    ->orWhere('products.description', 'LIKE', "%{$search}%");
             });
         }
 

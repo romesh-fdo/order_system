@@ -16,7 +16,7 @@ use App\Helpers\Helper;
 
 class OrderController extends Controller
 {
-    public function place(Request $request)
+    public function store(Request $request)
     {
         $validator = Validator::make($request->json()->all(), [
             'user_id' => 'required|exists:users,uuid',
@@ -24,12 +24,23 @@ class OrderController extends Controller
             'items.*.product_id' => 'required|exists:products,uuid',
             'items.*.quantity' => 'required|integer|min:1',
         ]);
-
+        
         $validator->after(function ($validator) {
-            if ($validator->errors()->has('items.*.quantity')) {
-                $validator->errors()->add('items.quantity', 'One or more items have invalid quantity. Each item must have a quantity of at least 1.');
+            $quantities = $validator->errors()->get('items.*.quantity');
+        
+            if (!empty($quantities)) {
+                $validator->errors()->add('items_quantities', 'Please provide a valid quantity for all selected products. Each item must have a quantity of at least 1.');
             }
         });
+        
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Fix the above issues and try again',
+                'validate_errors' => $validator->errors(),
+                'notify' => true,
+            ], 422);
+        }
 
         $order_data = $request->json()->all();
 
@@ -75,7 +86,6 @@ class OrderController extends Controller
             $order = Order::create([
                 'user_id' => $user['id'],
                 'total_price' => 0,
-                'status_id' => Status::getIdByCode(Status::NEW_ORDER),
             ]);
 
             foreach ($order_data['items'] as $item)
@@ -123,16 +133,15 @@ class OrderController extends Controller
         $user = Helper::getAuth($request);
 
         $orders = Order::where('user_id', $user->id)
-            ->with(['orderItems.product', 'status'])
+            ->with(['orderItems.product'])
             ->orderBy('created_at', 'desc')
             ->get();
 
         $response = $orders->map(function ($order) {
             return [
                 'uuid' => $order->uuid,
+                'status' => $order->status,
                 'total_price' => $order->total_price,
-                'status_name' => $order->status->status,
-                'status_badge' => $order->status->badge,
                 'items' => $order->orderItems->map(function ($item) {
                     if($item->product)
                     {
@@ -172,7 +181,6 @@ class OrderController extends Controller
         ], 200);
     }
 
-
     public function manageOrders()
     {
         return view('order.manage');
@@ -180,13 +188,13 @@ class OrderController extends Controller
 
     public function getOrderData(Request $request)
     {
-        $query = Order::with(['orderItems', 'user', 'status'])
+        $query = Order::with(['orderItems', 'user'])
             ->select(
                 'orders.id', 
                 'orders.uuid', 
                 'orders.user_id', 
                 'orders.total_price', 
-                'orders.status_id', 
+                'orders.status', 
                 'orders.created_at'
             );
 
@@ -195,9 +203,6 @@ class OrderController extends Controller
                 $subQuery->where('orders.total_price', 'LIKE', "%{$search}%")
                     ->orWhereHas('user', function($q) use ($search) {
                         $q->where('name', 'LIKE', "%{$search}%");
-                    })
-                    ->orWhereHas('status', function($q) use ($search) {
-                        $q->where('status', 'LIKE', "%{$search}%");
                     });
             });
         }
@@ -205,8 +210,6 @@ class OrderController extends Controller
         $orders = $query->get()->map(function($order) {
             $order->formatted_created_at = \Carbon\Carbon::parse($order->created_at)->format('jS \\of F Y g:i A');
             $order->user_name = $order->user->name;
-            $order->status_name = $order->status->status;
-            $order->status_badge = $order->status->badge;
             return $order;
         });
 
@@ -214,10 +217,10 @@ class OrderController extends Controller
             ->addIndexColumn()
             ->addColumn('action', function ($row) {
                 $actionBtn = '<a class="me-2" href="javascript:void(0)" onclick="viewRecord(\'' . $row->uuid . '\')"><i class="fas fa-eye text-success"></i></a>';
-                if($row->status->code == Status::NEW_ORDER)
+                if($row->status == Order::PENDING)
                 {
-                    $actionBtn .= '<a class="me-2" href="javascript:void(0)" onclick="cancelOrder(\'' . $row->uuid . '\')"><i class="fas fa-ban text-danger"></i></a>';
-                    $actionBtn .= '<a class="me-2" href="javascript:void(0)" onclick="completeOrder(\'' . $row->uuid . '\')"><i class="fa-regular fa-circle-check text-primary"></i></a>';
+                    $actionBtn .= '<a class="me-2" href="javascript:void(0)" onclick="updateOrderStatus(\'' . $row->uuid . '\',\'cancelled\')"><i class="fas fa-ban text-danger"></i></a>';
+                    $actionBtn .= '<a class="me-2" href="javascript:void(0)" onclick="updateOrderStatus(\'' . $row->uuid . '\',\'completed\')"><i class="fa-regular fa-circle-check text-primary"></i></a>';
                 }
                 return $actionBtn;
             })
@@ -227,7 +230,7 @@ class OrderController extends Controller
 
     public function show(Request $request)
     {
-        $order = Order::with(['orderItems', 'user', 'status'])
+        $order = Order::with(['orderItems', 'user'])
             ->where('uuid', $request['record_id'])
             ->first();
 
@@ -245,8 +248,6 @@ class OrderController extends Controller
             'uuid' => $order->uuid,
             'user_name' => $order->user->name,
             'total_price' => $order->total_price,
-            'status_name' => $order->status->status,
-            'status_badge' => $order->status->badge,
             'formatted_created_at' => $order->created_at->format('jS \\of F Y g:i A'),
             'items' => $order->orderItems->filter(function($item) {
                 return $item->product && !$item->product->trashed();
@@ -272,78 +273,54 @@ class OrderController extends Controller
         ], 200);
     }
 
-    public function cancelOrder(Request $request)
+    public function update(Request $request, $id)
     {
-        $order = Order::where('uuid', $request['record_id'])->first();
+        $validator = Validator::make($request->json()->all(), [
+            'status' => 'required|in:cancelled,completed',
+        ]);
 
-        if(!$order)
-        {
+        $new_order_data = $request->json()->all();
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Fix the above issues and try again',
+                'validate_errors' => $validator->errors(),
+                'notify' => true,
+            ], 422);
+        }
+    
+        $order = Order::where('uuid', $id)->first();
+    
+        if (!$order) {
             return response()->json([
                 'success' => false,
                 'message' => 'Order not found',
                 'notify' => true,
             ], 404);
         }
-
-        if($order->status_id != Status::getIdByCode(Status::NEW_ORDER))
-        {
+    
+        if ($order->status != Order::PENDING) {
             return response()->json([
                 'success' => false,
-                'message' => 'Order cannot be canceled as it has already been processed',
+                'message' => 'Order cannot be updated as it has already been processed',
                 'notify' => true,
             ], 422);
         }
-
-        if(!$order->update(['status_id' => Status::getIdByCode(Status::CANCELLED)]))
-        {
+    
+        $new_status = $new_order_data['status'] === 'cancelled' ? Order::CANCELLED : Order::COMPLETED;
+    
+        if (!$order->update(['status' => $new_status])) {
             return response()->json([
                 'success' => false,
                 'message' => 'Something went wrong. Please try again',
                 'notify' => true,
             ], 422);
         }
-
+    
         return response()->json([
             'success' => true,
-            'message' => 'Order canceled successfully',
-            'notify' => true,
-        ], 200);
-    }
-
-    public function completeOrder(Request $request)
-    {
-        $order = Order::where('uuid', $request['record_id'])->first();
-
-        if(!$order)
-        {
-            return response()->json([
-                'success' => false,
-                'message' => 'Order not found',
-                'notify' => true,
-            ], 404);
-        }
-
-        if($order->status_id != Status::getIdByCode(Status::NEW_ORDER))
-        {
-            return response()->json([
-                'success' => false,
-                'message' => 'Order cannot be canceled as it has already been processed',
-                'notify' => true,
-            ], 422);
-        }
-
-        if(!$order->update(['status_id' => Status::getIdByCode(Status::COMPLETED)]))
-        {
-            return response()->json([
-                'success' => false,
-                'message' => 'Something went wrong. Please try again',
-                'notify' => true,
-            ], 422);
-        }
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Order completed successfully',
+            'message' => "Order {$new_order_data['status']} successfully",
             'notify' => true,
         ], 200);
     }
