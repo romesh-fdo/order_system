@@ -19,7 +19,16 @@
 
 4. **Run the Following Commands**:
 
-   Use following credentials to login to the system
-      Admin (Username : superadmin / Password : abc123)
-      User 1 (Username : user1 / Password : abc123)
-      User 2 (Username : user2 / Password : abc123)
+   Use the following credentials to log in to the system:
+   
+   - **Admin**: 
+     - Username: `superadmin` 
+     - Password: `abc123`
+   
+   - **User 1**: 
+     - Username: `user1` 
+     - Password: `abc123`
+   
+   - **User 2**: 
+     - Username: `user2` 
+     - Password: `abc123`
