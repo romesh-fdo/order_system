@@ -39,3 +39,4 @@
 
    **Note**
    - When passing any id with the API request, pass uuid of relevent records
+   - Change the API endpoint URLs according to your host name
