@@ -17,7 +17,7 @@
    php artisan db:seed --class=RoleSeeder --env=testing
    php artisan db:seed --class=UserSeeder --env=testing
 
-4. **Run the Following Commands**:
+## Login Credentials
 
    Use the following credentials to log in to the system:
    
