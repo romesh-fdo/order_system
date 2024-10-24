@@ -37,7 +37,16 @@ class ProductController extends Controller
             ], 422);
         }
 
-        if(!Product::create($request->all()))
+        $product_data = array(
+            'name' => $request->name,
+            'description' => $request->description,
+            'price' => $request->price,
+            'stock_quantity' => $request->stock_quantity,
+        );
+
+        $product = Product::create($product_data);
+
+        if(!$product)
         {
             return response()->json([
                 'success' => false,
@@ -49,6 +58,7 @@ class ProductController extends Controller
 
         return response()->json([
             'success' => true,
+            'product_uuid' => $product->uuid,
             'message' => 'Product created successfully',
             'validate_errors' => null,
             'notify' => true,
@@ -141,7 +151,7 @@ class ProductController extends Controller
         {
             return response()->json([
                 'success' => false,
-                'message' => 'Product not found3',
+                'message' => 'Product not found',
                 'validate_errors' => null,
                 'notify' => true,
             ], 404);

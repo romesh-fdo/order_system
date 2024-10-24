@@ -63,6 +63,7 @@ class AuthController extends Controller
             'success' => true,
             'message' => 'Login successful',
             'token' => $token,
+            'user_uuid' => $user->uuid,
             'notify' => true,
         ], 200)->cookie('jwt', $token, 60, null, null, false, true);
     }

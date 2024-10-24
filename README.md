@@ -32,3 +32,10 @@
    - **User 2**: 
      - Username: `user2` 
      - Password: `abc123`
+
+## API Documentaiton
+
+   For comprehensive API testing, please refer to the `OrderSystem.postman_collection - v2.1.json` file located within the project directories. You can import this file into Postman to access the complete collection of API endpoints.
+
+   **Note**
+   - When passing any id with the API request, pass uuid of relevent records

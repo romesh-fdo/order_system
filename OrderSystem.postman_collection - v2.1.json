@@ -1,0 +1,373 @@
+{
+	"info": {
+		"_postman_id": "91003731-cc96-407f-869e-66c4d31e0a55",
+		"name": "OrderSystem",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24500314"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "username",
+							"value": "superadmin",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "abc123",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://ordersys.test/api/login_process",
+					"protocol": "http",
+					"host": [
+						"ordersys",
+						"test"
+					],
+					"path": [
+						"api",
+						"login_process"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Logout",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://ordersys.test/api/logout",
+					"protocol": "http",
+					"host": [
+						"ordersys",
+						"test"
+					],
+					"path": [
+						"api",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Product",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{   \r\n    \"name\": \"Toy car\",\r\n    \"description\": \"Toy car description\",\r\n    \"stock_quantity\": 45,\r\n    \"price\": 450\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://ordersys.test/api/products",
+					"protocol": "http",
+					"host": [
+						"ordersys",
+						"test"
+					],
+					"path": [
+						"api",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Products List",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://ordersys.test/api/products",
+					"protocol": "http",
+					"host": [
+						"ordersys",
+						"test"
+					],
+					"path": [
+						"api",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Single Product Details",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "http://ordersys.test/api/products/show/35802ab5-59ea-4b46-b0f4-db23db0b57a9",
+					"protocol": "http",
+					"host": [
+						"ordersys",
+						"test"
+					],
+					"path": [
+						"api",
+						"products",
+						"show",
+						"35802ab5-59ea-4b46-b0f4-db23db0b57a9"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Product",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{   \r\n    \"name\": \"Toy car\",\r\n    \"description\": \"Toy car description 21\",\r\n    \"stock_quantity\": 45,\r\n    \"price\": 450\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://ordersys.test/api/products/35802ab5-59ea-4b46-b0f4-db23db0b57a9",
+					"protocol": "http",
+					"host": [
+						"ordersys",
+						"test"
+					],
+					"path": [
+						"api",
+						"products",
+						"35802ab5-59ea-4b46-b0f4-db23db0b57a9"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Product",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://ordersys.test/api/products/8e10c67c-0472-4b3a-b507-ad64676403a8",
+					"protocol": "http",
+					"host": [
+						"ordersys",
+						"test"
+					],
+					"path": [
+						"api",
+						"products",
+						"8e10c67c-0472-4b3a-b507-ad64676403a8"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Order",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{   \r\n    \"user_id\":\"e65722f6-dc5d-467d-9659-99ec1df0f8ba\",\r\n    \"items\":[\r\n        {\r\n            \"product_id\":\"bfcf1083-3375-4181-ae52-fe519f183165\",\r\n            \"quantity\":4\r\n        },\r\n        {\r\n            \"product_id\":\"ccf8a902-78eb-447f-a666-f4be6914c5aa\",\r\n            \"quantity\":3\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://ordersys.test/api/orders",
+					"protocol": "http",
+					"host": [
+						"ordersys",
+						"test"
+					],
+					"path": [
+						"api",
+						"orders"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get My Order Details",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://ordersys.test/api/orders/my_orders",
+					"protocol": "http",
+					"host": [
+						"ordersys",
+						"test"
+					],
+					"path": [
+						"api",
+						"orders",
+						"my_orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Single Order",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "record_id",
+							"value": "87890bf0-481c-4a8f-9c97-cd4227bb553b",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://ordersys.test/api/orders/show",
+					"protocol": "http",
+					"host": [
+						"ordersys",
+						"test"
+					],
+					"path": [
+						"api",
+						"orders",
+						"show"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Orders List",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://ordersys.test/api/orders",
+					"protocol": "http",
+					"host": [
+						"ordersys",
+						"test"
+					],
+					"path": [
+						"api",
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Order",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"status\": \"completed\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://ordersys.test/api/orders/64865b49-c4b3-4590-9181-70a5a7285436",
+					"protocol": "http",
+					"host": [
+						"ordersys",
+						"test"
+					],
+					"path": [
+						"api",
+						"orders",
+						"64865b49-c4b3-4590-9181-70a5a7285436"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

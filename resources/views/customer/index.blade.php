@@ -115,6 +115,7 @@
         });
 
         $('#btn_place_order').click(async function() {
+            console.log(JSON.stringify(cart_details));
             if(cart_details.items.length === 0)
             {
                 showNotification('warning', 'Please select at least one product before placing an order');

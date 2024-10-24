@@ -310,6 +310,7 @@ class OrderController extends Controller
     
         $new_status = $new_order_data['status'] === 'cancelled' ? Order::CANCELLED : Order::COMPLETED;
     
+        //only updating the status assuming that only the status can be updated
         if (!$order->update(['status' => $new_status])) {
             return response()->json([
                 'success' => false,
@@ -320,7 +321,7 @@ class OrderController extends Controller
     
         return response()->json([
             'success' => true,
-            'message' => "Order {$new_order_data['status']} successfully",
+            'message' => "Order updated successfully",
             'notify' => true,
         ], 200);
     }
