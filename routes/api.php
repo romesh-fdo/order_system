@@ -34,7 +34,7 @@ Route::group(['middleware' => ['jwt', 'role:' . Role::SUPER_ADMIN]], function ()
     Route::get('/products/show/{id}', [ProductController::class, 'show'])->name('products.show');
 
     Route::get('/orders', [OrderController::class, 'getOrderData'])->name('orders');
-    Route::post('/orders/show', [OrderController::class, 'show'])->name('orders.show');
+    Route::post('/order/show', [OrderController::class, 'show'])->name('orders.show');
     Route::put('/orders/{id}', [OrderController::class, 'update'])->name('orders.update');
 });
 
